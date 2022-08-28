@@ -12,7 +12,7 @@ root.render(
         clientId="D4u81F60gFrulRSXtS0Ce21TgIt3fJRj"
         redirectUri={window.location.origin}
         audience="banco-austral.web.app/auth0"
-        scope="read:current_user update:current_user_metadata"
+        scope="openid%20email%20profile"
     >
         <App />
     </Auth0Provider>

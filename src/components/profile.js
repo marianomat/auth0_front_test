@@ -23,11 +23,10 @@ const Profile = () => {
             try {
                 const accessToken = await getAccessTokenSilently({
                     audience: `banco-austral.web.app/auth0`,
-                    scope: "read:current_user",
+                    scope: "openid%20email%20profile"
                 });
 
                 console.log(accessToken)
-
                 const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
 
                 const metadataResponse = await fetch(userDetailsByIdUrl, {
@@ -49,7 +48,34 @@ const Profile = () => {
     }, [getAccessTokenSilently, user?.sub]);
 
     function handleFetch() {
-        axios.get("http://localhost:8080/users",
+        axios.get("https://peaceful-harbor-44195.herokuapp.com/users",
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        ).then(res => {
+            console.log(res)
+        })
+    }
+
+    function handleFetchMe() {
+        axios.get("https://peaceful-harbor-44195.herokuapp.com/users/me",
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }
+        ).then(res => {
+            console.log(res)
+        })
+    }
+
+    function handleFetchDeleteMe() {
+        axios.delete("https://peaceful-harbor-44195.herokuapp.com/users/delete/me",
+
             {
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -63,8 +89,10 @@ const Profile = () => {
     return (
         isAuthenticated && (
             <div>
-                <button onClick={handleFetch}>Fetch</button>
-                <img src={user.picture} alt={user.name}/>
+                <button onClick={handleFetchDeleteMe}>Delete Me</button>
+                <button onClick={handleFetch}>Fetch Users</button>
+                <button onClick={handleFetchMe}>Fetch Me</button>
+                <img src={user.picture} alt={user.name} referrerPolicy="no-referrer"/>
                 <h2>{user.name}</h2>
                 <p>{user.email}</p>
                 <h3>User Metadata</h3>
